@@ -3,7 +3,36 @@
 var co = require('co');
 var thunkify = require('thunkify');
 
-var test = function (val, callback) {
+var step_1 = thunkify(function (val, callback) {
+	setTimeout(function(){
+		callback(null, val + 1);
+	},1000)
+})
+
+var step_2 = thunkify(function (val, callback) {
+	setTimeout(function(){
+		callback(null, val + 1);
+	},2000)
+})
+
+function* gen(x){
+	console.log('x:',x);
+	console.time('gen');
+
+  var y = yield step_1(x);
+  	console.log('y:',y);
+
+  var z = yield step_2(y);
+  	console.log('z:',z)
+
+  	console.timeEnd('gen');
+  return z;
+}
+
+co(gen,1);
+
+
+/*var test = function (val, callback) {
 	setTimeout(function(){
 		callback && callback(null, val + 'testvalue');
 	},1000)
@@ -44,4 +73,4 @@ co(_testFun);
 
 co(testFun);
 
-co(testErrorFun);
+co(testErrorFun);*/
