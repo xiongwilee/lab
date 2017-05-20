@@ -1,2 +1,3 @@
-aaa='sh ';
-${aaa} test2.sh
+#!/bin/sh
+
+node shell_test.js
