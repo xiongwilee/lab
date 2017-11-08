@@ -1,2 +1,3 @@
-import {bar} from './b';
+import { bar } from './b';
+
 bar('main');
