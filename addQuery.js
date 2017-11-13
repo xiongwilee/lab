@@ -29,7 +29,8 @@ function addQuery(url, query, opt) {
   // protocal + host + pathname
   const curProtocol = urlObj.protocol ? (urlObj.protocol + '//') : '';
   const curHost = urlObj.host || '';
-  const curOrigin = curProtocol + curHost + urlObj.pathname;
+  const curPathname = urlObj.pathname || '';
+  const curOrigin = curProtocol + curHost + curPathname;
 
   // query
   const queStr = querystring.stringify(mergeQue);
