@@ -26,6 +26,14 @@ Plugin 'godlygeek/tabular'
 " kristijanhusak/vim-hybrid-material 一种高亮方案 
 Plugin 'kristijanhusak/vim-hybrid-material'
 
+" PHP indentation plug-in for VIm
+Plugin '2072/PHP-Indenting-for-VIm'
+
+" PHP autocomplete https://github.com/m2mdas/phpcomplete-extended
+Bundle 'Shougo/vimproc'
+Bundle 'Shougo/unite.vim'
+Bundle 'm2mdas/phpcomplete-extended'
+
 " 你的所有插件需要在下面这行之前
 call vundle#end()            " 必须
 filetype plugin indent on    " 必须 加载vim自带和插件相应的语法和文件类型相关脚本
@@ -34,12 +42,22 @@ filetype plugin indent on    " 必须 加载vim自带和插件相应的语法和
 set nu!
 
 " 自动打开NERDTree
-autocmd vimenter * NERDTree
+autocmd VimEnter * NERDTree
+" 自动定位到最新打开的窗口 previous (last accessed) window.
+autocmd VimEnter * wincmd p
+" 如果最后一个文件关闭则自动关闭NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " 启用高亮
 syntax enable
 set background=dark
 colorscheme hybrid_reverse
+
+" 自动缩进
+set autoindent 
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
 
 " 忽视插件改变缩进,可以使用以下替代:
 "filetype plugin on
