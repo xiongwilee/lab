@@ -29,7 +29,7 @@ function insertSort(arr) {
 
       if (item <= curVal) {
         return i;
-      }else if (nextVal === undefined) {
+      } else if (nextVal === undefined) {
         return i + 1;
       } else if (item > curVal && nextVal > item) {
         return i + 1;
@@ -148,3 +148,41 @@ function mergeSort(arr) {
     return [arr, rightArr];
   }
 }
+
+/**
+ * 快速排序
+ * @param  {Array} arr [description]
+ * @return {Array}     [description]
+ */
+function quickSory(arr) {
+  if (arr.length <= 1) return arr;
+
+  // 取第一个值为比较参数
+  let defaultValue = arr[0];
+
+  let curIndex = 1;
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] > defaultValue) {
+      continue;
+    } else {
+      let curIndexValue = arr[curIndex];
+      arr[curIndex] = arr[i];
+      arr[i] = curIndexValue;
+      curIndex++;
+    }
+  }
+
+  // 把比较参数放到正确的位置
+  arr[0] = arr[curIndex - 1];
+  arr[curIndex - 1] = defaultValue;
+
+  const leftArr = quickSory(arr.slice(0, curIndex - 1));
+  const rightArr = quickSory(arr.slice(curIndex));
+
+  return leftArr.concat([defaultValue], rightArr);
+}
+
+let length = 1000;
+let array = Array.apply(null, {length: length}).map(item => Math.floor(Math.random() * 1000));
+
+quickSory(array);
