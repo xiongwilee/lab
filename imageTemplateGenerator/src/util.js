@@ -127,29 +127,31 @@ exports.getImageByUrl = function getImageByUrl(params, config) {
 exports.getImageByText = function getImageByText(text, config) {
   const conf = Object.assign({
     color: '#333333',
-    fontSize: '18',
+    fontSize: '16',
     fontWeigth: 'Normal',
-    width: 1000,
-    height: 1000
+    width: 4000,
+    height: 4000
   }, config.style);
 
   const fontFamily = path.resolve(__dirname, `../fonts/SourceHanSerifCN-${conf.fontWeigth}.ttf`);
-  const filePath = path.resolve(__dirname, `../images/${Date.now()}-${Math.random()}.png`);
 
   return new Promise((resolve, reject) => {
     // gm(x,y, 'none')为设置为透明，
     // 参考：https://github.com/aheckmann/gm/issues/580#issuecomment-291173926
     gm(conf.width, conf.height, 'none')
+      // 设置分辨率，使其在高清屏下更清晰
+      .density(300, 300)
       .stroke(conf.color)
       .font(fontFamily, conf.fontSize)
-      .drawText(0, conf.fontSize, text)
+      // 这里垂直距离有偏移，必须通过fontSize的倍数消除偏移
+      .drawText(0, conf.fontSize * 4, text)
       .trim()
-      // 这里有个BUG，通过创建的图片无法通过Stream或Buffer
-      // 所以，必须先写入文件系统，然后再通过gm读取
-      .write(filePath, function(err) {
+      .toBuffer('PNG', function(err, buffer) {
+        // 测试是否读取到了bg
+        // fs.writeFile('./text.png', image, function(err){ console.log(err, '~~~~~~~') });
         if (err) return reject(err);
-       	console.log('~~~~~~~~~~~~~~~~~');
-        resolve(fs.createReadStream(filePath));
+
+        resolve(buffer);
       });
   });
 

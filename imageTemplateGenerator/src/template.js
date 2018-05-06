@@ -1,5 +1,6 @@
 const Stream = require('stream');
 const fs = require('fs');
+const path = require('path');
 
 const gm = require('gm');
 const Util = require('./util');
@@ -26,15 +27,15 @@ class Template {
         // 测试是否读取到了bg
 
         // 如果curItem没有配置，则使用默认的图片
-        const imgConfig = curItem || curTemp.default;
+        const curImg = curItem || curTemp.default;
 
-        return Util.getImage(imgConfig, {
+        return Util.getImage(curImg, {
             type: 'Buffer',
             style: curTemp.style
           })
           .then((image) => {
             // 测试是否读取到了配置文件中的图片
-            fs.writeFile('./' + index + '.png', image, function(err){ console.log(err, '~~~~~~~') });
+            // fs.writeFile('./' + index + '.png', image, function(err){ console.log(err, '~~~~~~~') });
 
             // 将要拼接的图片重置宽高
             return this.resize(image, curTemp);
@@ -42,9 +43,8 @@ class Template {
           .then((image) => {
             // 测试是否resize成功
             // 在这里测试下，是不是BUFFER
-            console.log(Buffer.isBuffer(bg));
-            fs.writeFile('./' + index + '_resize.png', image, function(err){ console.log(err, '~~~~~~~') });
-            fs.writeFile('./' + index + '_bg.png', bg, function(err){ console.log(err, '~~~~~~~') });
+            // fs.writeFile('./' + index + '_resize.png', image, function(err){ console.log(err, '~~~~~~~') });
+            // fs.writeFile('./' + index + '_bg.png', bg, function(err){ console.log(err, '~~~~~~~') });
 
             // 合并图片
             return this.merge(image, bg, curTemp);
@@ -72,7 +72,7 @@ class Template {
       gm(image)
         .resize(sizeConf[0], sizeConf[1])
         .toBuffer('PNG', function(err, buffer) {
-          if (err) reject(err);
+          if (err) return reject(err);
           resolve(buffer)
         });
     })
@@ -81,16 +81,26 @@ class Template {
   merge(image, bg, curTemp) {
 
     return new Promise((resolve, reject) => {
-    	fs.writeFile('./merge_images.png', image, function(err){ console.log(err, '~~~~~~~') });
-    	fs.writeFile('./merge_bg.png', bg, function(err){ console.log(err, '~~~~~~~') });
+      // 测试是否成功获取文件      
+      // fs.writeFile('./merge_images.png', image, function(err) { console.log(err, '~~~~~~~') });
+      // fs.writeFile('./merge_bg.png', bg, function(err) { console.log(err, '~~~~~~~') });
 
-      gm(bg)
-        .composite(image)
-        .geometry(curTemp.position)
-        .toBuffer('PNG', function(err, buffer) {
-          if (err) reject(err);
-          resolve(buffer)
-        });
+      // 这里的composite方法不能执行一个Buffer，
+      // 所以必须先写入文件系统
+      const imagePath = path.resolve(__dirname, `../images/temp-${Date.now()}-${Math.random().toString(16).substr(2)}.png`);
+      fs.writeFile(imagePath, image, function(err) {
+        if (err) return reject(err);
+        gm(bg)
+          .composite(imagePath)
+          .geometry(curTemp.position)
+          .toBuffer('PNG', function(err, buffer) {
+            if (err) return reject(err);
+            // 完事儿后删除文件
+            fs.unlinkSync(imagePath);
+
+            resolve(buffer)
+          });
+      });
     });
   }
 }
@@ -104,6 +114,6 @@ module.exports = function(bg, tempConf) {
       // 测试是否读取到了bg
       // fs.writeFile('./bg.png', image, function(err){ console.log(err, '~~~~~~~') });
 
-      return new Template(bg, tempConf);
+      return new Template(image, tempConf);
     });
 }

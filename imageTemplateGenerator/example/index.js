@@ -23,15 +23,15 @@ Itg(bgPath, {
     position: '+66+155',
     default: ''
   },
-  // title: {
-  //   size: '240,200',
-  //   position: '+66+155',
-  //   style: {
-  //     fontSize: '18',
-  //     color: '#333333'
-  //   },
-  //   default: '更多商品，敬请期待'
-  // },
+  title: {
+    size: '320,60',
+    position: '+28+380',
+    style: {
+      fontSize: '14',
+      color: '#333333'
+    },
+    default: '更多商品，敬请期待'
+  },
   qrcode: {
     size: '91,91',
     position: '+93+528',
@@ -40,7 +40,7 @@ Itg(bgPath, {
 }).then((temp) => {
   return temp.gen({
     banner: 'https://img002.qufenqi.com/products/e0/af/e0afcc5a1350f4966f963bc0bff6aafa.jpg',
-    title: 'Apple iPhone X (A1865) 64GB 深空灰色 移动联通电信4G手机 ',
+    title: 'Apple iPhone X (A1865) 64GB 深空灰色 \n移动联通电信4G手机 ',
     qrcode: {
       method: 'GET',
       url: 'https://www.baidu.com/img/bd_logo1.png',
@@ -51,8 +51,7 @@ Itg(bgPath, {
     }
   })
 }).then((image) => {
-  const writeStream = fs.createWriteStream('./test.png');
-  image.pipe(writeStream);
+  fs.writeFile('./merged.png', image, function(err){ console.log(err, '~~~~~~~') });
 }).catch((err) => {
   console.error(err);
 })
