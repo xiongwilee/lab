@@ -182,7 +182,7 @@ function quickSory(arr) {
   return leftArr.concat([defaultValue], rightArr);
 }
 
-let length = 1000;
-let array = Array.apply(null, {length: length}).map(item => Math.floor(Math.random() * 1000));
+let length = 100000;
+let array = Array.apply(null, {length: length}).map(item => Math.floor(Math.random() * 100000));
 
 quickSory(array);
