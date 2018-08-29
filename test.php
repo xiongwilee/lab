@@ -1,5 +1,17 @@
 <?php
-$target_query_params = [];
-parse_str("test=test&test1=test1&test=test2", $target_query_params);
-// parse_str("test", $target_query_params);
-var_dump($target_query_params);
+$test = '';
+$result = explode('|',$test);
+echo(json_encode($result));
+
+$test1 = [];
+echo(json_encode($test1));
+
+$test2 = 'test';
+$result = explode('|',$test2);
+echo(json_encode($result));
+
+echo(json_encode(['测试']));
+
+$result = [ 'banners' => 'test1'];
+$result['banners'] = [ 'test0' . $result['banners'] ];
+echo(json_encode($result));
