@@ -1,0 +1,9 @@
+process.nextTick(()=>{
+	console.log(1);
+});
+Promise.resolve(2).then((data)=>{
+	console.log(data);
+});
+process.nextTick(()=>{
+	console.log(3);
+});
