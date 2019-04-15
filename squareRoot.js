@@ -8,7 +8,7 @@
  * @return {Number|Boolean}
  */
 module.exports = function squareRoot(i){
-  // 首先判断是否为数字
+  // 首先判断是否为整型数字
   const isInt = Number.isInteger(i);
   if (!isInt) return false;
 
@@ -16,12 +16,12 @@ module.exports = function squareRoot(i){
   if (i < 0) return false;
   if (i == 0) return 0;
 
-  return square(1)
+  return square(1);
 
   function square(j) {
     if (j*j > i) {
       return -1;
-    } else if ( j*j === i){
+    } else if (j*j === i) {
       return j;
     } else {
       return square(++j);
