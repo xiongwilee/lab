@@ -19,18 +19,15 @@ module.exports = function squareRoot(i){
   let left = 1;
   let right = Math.ceil(i/2);
 
-  let times = 0;
   return square();
 
   function square() {
-    if (times++ > 20) return -1;
     if (left === right || left > right) return -1;
 
     const center = Math.ceil((left + right)/2);
     const centerSqure = center * center;
 
     if (centerSqure === i) return center;
-    
     if (right - left === 1) return -1;
 
     if (centerSqure < i) {
