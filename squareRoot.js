@@ -3,7 +3,6 @@
  * @param {Number} i 需要开方的数字
  * @todo
  *  1. 如果是i为浮点型，可以先转为整型再调用该方法
- *  2. 其中一个结束判断：if (right - left === 1) return -1; 有待优化
  * @return {Number|Boolean}
  */
 module.exports = function squareRoot(i){
