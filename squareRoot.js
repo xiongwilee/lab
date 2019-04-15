@@ -3,8 +3,7 @@
  * @param {Number} i 需要开方的数字
  * @todo
  *  1. 如果是i为浮点型，可以先转为整型再调用该方法
- *  2. 递归体中可以做优化，不一定从1开始迭代；迭代结束也可以优化，不一定j*j > i才返回-1
- * 
+ *  2. 其中一个结束判断：if (right - left === 1) return -1; 有待优化
  * @return {Number|Boolean}
  */
 module.exports = function squareRoot(i){
@@ -14,17 +13,32 @@ module.exports = function squareRoot(i){
 
   // 如果是负数肯定不能被开方
   if (i < 0) return false;
-  if (i == 0) return 0;
+  if (i < 2) return i;
 
-  return square(1);
+  // 设置flag
+  let left = 1;
+  let right = Math.ceil(i/2);
 
-  function square(j) {
-    if (j*j > i) {
-      return -1;
-    } else if (j*j === i) {
-      return j;
+  let times = 0;
+  return square();
+
+  function square() {
+    if (times++ > 20) return -1;
+    if (left === right || left > right) return -1;
+
+    const center = Math.ceil((left + right)/2);
+    const centerSqure = center * center;
+
+    if (centerSqure === i) return center;
+    
+    if (right - left === 1) return -1;
+
+    if (centerSqure < i) {
+      left = center;
     } else {
-      return square(++j);
+      right = center;
     }
+
+    return square();
   }
 }
